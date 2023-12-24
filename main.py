@@ -1,4 +1,5 @@
 from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 import os
 import pandas as pd
 import numpy as np
@@ -8,9 +9,13 @@ os.chdir(r"./Data/")
 
 data = pd.read_csv("train.csv")
 predict = pd.read_csv("test.csv")
+
+
+
 target = "life_expectancy"
 
 data.ffill(inplace=True)
+predict.ffill(inplace=True)
 for i in range(0, len(data["country"].values)):
     data["country"].values[i] = hash(data["country"].values[i])
 
@@ -27,7 +32,7 @@ for j in range(0, len(predict["status"].values)):
 features = data.columns.tolist()
 features.remove(target)
 
-model = LinearRegression(n_jobs=-1)
+model = RandomForestRegressor(n_jobs=-1)
 model.fit(data[features].values, data[target].values)
 
 y_new = model.predict(predict[features].values)
